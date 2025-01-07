@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import userRoutes from './routes/user.route.js'
 const app = express();
 const port = 8000;
 
@@ -21,9 +22,10 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(err)
 })
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+//Routes
+// here we are using the userRoutes from the user.route.js file
+//we have already created the get request in the user.route.js file so here we are using the userRoutes as use
+app.use('/api/user', userRoutes)
 
 
 app.listen(port, () => {
