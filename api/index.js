@@ -1,9 +1,15 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+//here we are importing the router as userRoutes from the user.route.js file
 import userRoutes from './routes/user.route.js'
+import authRoutes from './routes/auth.route.js'
 const app = express();
 const port = 8000;
+
+//middleware
+//middleware is a function that has access to the request and response object
+app.use(express.json())
 
 //Steps to hide the sensitive data
 // we have install package call dotenv to use .env file
@@ -26,6 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 // here we are using the userRoutes from the user.route.js file
 //we have already created the get request in the user.route.js file so here we are using the userRoutes as use
 app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
 
 
 app.listen(port, () => {
