@@ -7,7 +7,7 @@ import { FaMoon } from 'react-icons/fa'
 export default function Header() {
     const path = useLocation().pathname;
     return (
-        <Navbar className='border-b-2'>
+        <Navbar className='border-b-2 dark:border-gray-700'>
             {/* sm:text-lg means if the screen is sm than the text will vary as it indicates and dark:text-white means if the screen is dark then the text will be white */}
             <Link to='/' className='self-center text-sm sm:text-lg whitespace-nowrap font-semibold dark:text-white'>
                 <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Saroj's</span>
@@ -27,7 +27,7 @@ export default function Header() {
                     <FaMoon/>
                 </Button>
                 <Link to='/sign-in'>
-                    <Button gradientDuoTone='purpleToBue'>Sign In</Button>
+                    <Button gradientDuoTone='purpleToBlue' className='shadow-2xl' outline>Sign In</Button>
                 </Link>
                 <Navbar.Toggle className='w-12 h-10'></Navbar.Toggle>
             </div>
