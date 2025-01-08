@@ -1,12 +1,16 @@
 import {Button, Label, TextInput, Alert, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { signInFailure, signInSuccess, signInStart } from '../redux/user/userSlice'
 
 export default function SignIn() {
   const [formdata, setFormData] = useState({})
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const {loading, error : errorMessage} = useSelector(state => state.user) //here user is the name we have declared in userSlice.js in redux/user/userSlice.js
+  //since we have declared error in the userSlice.js file and use it as errorMessage in SignIn.jsx file so we are using error as errorMessage
   const navigate = useNavigate()
+
+  const dispatch = useDispatch();
 
 
   const handleChange = (e) => {
@@ -19,12 +23,10 @@ export default function SignIn() {
     e.preventDefault();
     //while sumbitting the form the page reload so we don't want that therefore we are preventing that using preventDefault() method
     if (!formdata.email || !formdata.password) {
-      return setErrorMessage('please fill out all fields')
+      return dispatch(signInFailure("Please fill all the fields"))
     }
     try { 
-      setLoading(true);
-      //if there is the error from the previous request then we are setting the error message to null i.e empty
-      setErrorMessage(null);
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         //here we are sending the data to the server
         method: 'POST',
@@ -36,15 +38,14 @@ export default function SignIn() {
       const data = await res.json();
       //here we are checking if the username is same then throw error message
       if (data.success === false) {
-        return setErrorMessage(data.message)
+        dispatch(signInFailure(data.message));
       }
-      setLoading(false);
       if (res.ok) {
+        dispatch(signInSuccess(data));
         navigate('/')
       }
     } catch (error) {
-      setErrorMessage(error.message)
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   }
   
