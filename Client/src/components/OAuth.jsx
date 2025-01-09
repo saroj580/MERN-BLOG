@@ -36,7 +36,7 @@ export default function OAuth() {
                 navigate('/')
             }
         } catch (err) {
-            
+            console.log(err);
         }
     }
   return (

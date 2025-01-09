@@ -7,7 +7,8 @@ import OAuth from '../components/OAuth'
 
 export default function SignIn() {
   const [formdata, setFormData] = useState({})
-  const {loading, error : errorMessage} = useSelector(state => state.user) //here user is the name we have declared in userSlice.js in redux/user/userSlice.js
+  const { loading, error: errorMessage } = useSelector(state => state.user)
+  //here user is the name we have declared in userSlice.js in redux/user/userSlice.js
   //since we have declared error in the userSlice.js file and use it as errorMessage in SignIn.jsx file so we are using error as errorMessage
   const navigate = useNavigate()
 

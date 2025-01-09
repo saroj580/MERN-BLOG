@@ -9,7 +9,7 @@ import { toggleTheme } from '../redux/theme/themeSlice'
 
 export default function Header() {
     const path = useLocation().pathname;
-    const currentUser = useSelector(state => state.user);
+    const {currentUser} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const {theme} = useSelector((state) => state.theme)
     return (
@@ -35,7 +35,7 @@ export default function Header() {
                 {/* Show the user dynamically */} 
                 {currentUser ? (
                     <Dropdown arrowIcon={false} inline label={
-                        <Avatar alt='user' img={currentUser.profilePicture} rounded></Avatar>
+                       <Avatar alt='user' img={currentUser.profilePicture} rounded></Avatar> 
                     }>
                         <Dropdown.Header> 
                             <span className='block text-sm'>@{ currentUser.username}</span>

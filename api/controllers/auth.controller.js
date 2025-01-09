@@ -9,7 +9,7 @@ export const signup = async (req, res, next) => {
     
     const { username, email, password } = req.body;
     if (!username || !email || !password || username === '' || email === '' || password === '') {
-        new(errorHandler(400, "All fields are required"));
+        next(errorHandler(400, "All fields are required"));
     }
 
     //hashing the password
@@ -33,13 +33,14 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => { 
     const { email, password } = req.body;
     if(!email || !password || email === '' || password === '') {
-        new(errorHandler(400, "All fields are required"));
+        next(errorHandler(400, "All fields are required"));
     }
     try {
         const validUser = await User.findOne({ email });
         if (!validUser) {
-            next(errorHandler(404, "User not found"));
+            return next(errorHandler(404, "User not found"));
         }
+        //here firstly the the password will compare with the existing password then only it will authorize to sign in
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) {
             return next(errorHandler(400, "Invalid password"));
@@ -61,30 +62,28 @@ export const google = async (req, res, next) => {
     try {
         const user = await User.findOne({ email })
         if (user) {
-            const token = jwt.sign({ id: user_id }, process.env.JWT_SECRET);
-            const { password, ...rest } = user._doc;
-            res.status(200).cookie('access_token', token, {
-                httpOnly: true,
-            }).json(rest);
-        }else{
-            const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
-            //toString(36) means it will count 0-9 and a-z ==> 36 and slice(-8) means it will generate 0.___8 from where 0 will exclude and the value after the point will displayed
-            const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
-            const newUser = new User({
-                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
-                //Arun => arun39012 we are taking toString(9) only
-                email,
-                password: hashedPassword,
-                profilePicture: googlePhotoUrl,
-            });
-            await newUser.save();
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             const { password, ...rest } = user._doc;
             res.status(200).cookie('access_token', token, {
                 httpOnly: true,
             }).json(rest);
+        } else {
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const newUser = new User({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
+                email,
+                password: hashedPassword,
+                profilePicture: googlePhotoUrl,
+            });
+            await newUser.save();
+            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+            const { password, ...rest } = newUser._doc;
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true,
+            }).json(rest);
         }
     } catch (err) {
-        
+        next(err);
     }
 }
