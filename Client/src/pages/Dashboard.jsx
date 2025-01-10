@@ -16,15 +16,13 @@ export default function Dashboard() {
     }
   }, [location.search])
   return (
-    <div className ='min-h-screen flex flex-col md:flex-row w-full'>
+    <div className ='min-h-screen w-full flex flex-col md:flex-row'>
       <div className = 'md:w-56'>
         {/* sidebar */}
         <DashSideBar />
       </div>
-      <div>
-        {/* profile .... */}
-        {tab === 'profile' && <DashProfile />}
-      </div>
+      {/* profile .... */}
+      {tab === 'profile' && <DashProfile />}
     </div>
   )
 }

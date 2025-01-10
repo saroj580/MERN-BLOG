@@ -4,7 +4,7 @@ import { BsFacebook, BsGithub, BsInstagram, BsLinkedin, BsTwitter } from 'react-
 import { Link } from 'react-router-dom'
 
 export default function FooterComp() {
-    return <Footer container className='border border-t-2 border-teal-500 dark:border-gray-700 '>
+    return <Footer container className='border border-t-2 border-teal-500 dark:border-gray-700 w-full'>
         <div className='w-full max-w-7xl mx-auto'>
             <div className='grid w-full justify-between sm:flex md:grid-cols-1'>
                 <div className='mt-5'>
