@@ -53,11 +53,11 @@ export default function FooterComp() {
             <div className='w-full sm:justify-between sm:items-center sm:flex'>
                 <Footer.Copyright href='#' by="Saroj's Blog" year={new Date().getFullYear()} />
                 <div className='flex gap-6 mt-5 sm:mt-0 sm:justify-center'>
-                    <Footer.Icon href='#' icon={BsFacebook} />
-                    <Footer.Icon href='#' icon={BsGithub} />
-                    <Footer.Icon href='#' icon={BsInstagram} />
-                    <Footer.Icon href='#' icon={BsLinkedin} />
-                    <Footer.Icon href='#' icon={BsTwitter} />
+                    <Footer.Icon href='https://www.facebook.com/' icon={BsFacebook} />
+                    <Footer.Icon href='https://github.com/saroj580' icon={BsGithub} />
+                    <Footer.Icon href='https://www.instagram.com/direct/t/17844485306949198/' icon={BsInstagram} />
+                    <Footer.Icon href='https://www.linkedin.com/feed/' icon={BsLinkedin} />
+                    <Footer.Icon href='https://x.com/home' icon={BsTwitter} />
                 </div>
             </div>
         </div>
