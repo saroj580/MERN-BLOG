@@ -1,6 +1,6 @@
 import User from '../model/user.model.js';
 import bcryptjs from 'bcryptjs';
-import { errorHandler } from '../utils.js/errorHandler.js';
+import { errorHandler } from '../utils/errorHandler.js';
 import jwt from 'jsonwebtoken';
 // installing bcryptjs using 'npm i bcryptjs'
 // bcrypt is used to hash i.e hide the user password in the database

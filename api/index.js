@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 //here we are importing the router as userRoutes from the user.route.js file
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
+import cookieParser from 'cookie-parser';
+
 const app = express();
 const port = 8000;
 
@@ -33,6 +35,7 @@ mongoose.connect(process.env.MONGO_URI)
 //we have already created the get request in the user.route.js file so here we are using the userRoutes as use
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use(cookieParser());
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
