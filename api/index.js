@@ -5,11 +5,18 @@ import dotenv from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser';
+import { v2 as cloudinary } from 'cloudinary';
+import uploadRoutes from './routes/upload.route.js';
+import cors from 'cors';
+
+
+
 
 const app = express();
 const port = 8000;
 
 //middleware
+app.use(cors());
 //middleware is a function that has access to the request and response object
 app.use(express.json())
 
@@ -21,6 +28,11 @@ app.use(express.json())
 //add the .env file in the .gitignore file so that it will not be pushed to the github
 //initialize the dotenv
 dotenv.config()
+cloudinary.config({
+    cloud_name: "digyyblto",
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret : process.env.CLOUDINARY_API_SECRET
+})
 
 //connect to the database
 mongoose.connect(process.env.MONGO_URI)
@@ -36,6 +48,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use(cookieParser());
+app.use('/api/upload', uploadRoutes);
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

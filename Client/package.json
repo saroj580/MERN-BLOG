@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.1",
+    "@cloudinary/url-gen": "^1.21.0",
     "@reduxjs/toolkit": "^2.5.0",
     "firebase": "^11.1.0",
     "flowbite-react": "^0.10.2",
