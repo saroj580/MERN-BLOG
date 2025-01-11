@@ -1,13 +1,15 @@
 import { TextInput, Button } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateUser } from '../redux/user/userSlice'
+import { updateUser, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice'
 import { useRef } from 'react'
 import { Cloudinary } from '@cloudinary/url-gen';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashProfile() {
-  const { currentUser } = useSelector(state => state.user)
+  const { currentUser, deleteStatus } = useSelector(state => state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const fetchUserData = async () => {
     try {
@@ -165,6 +167,26 @@ export default function DashProfile() {
       }
   };
 
+  const handleDeleteAccount = async () => {
+    dispatch(deleteUserStart());
+    try {
+      const response = await fetch(`http://localhost:8000/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        dispatch(deleteUserSuccess());
+        navigate('/sign-in'); // Navigate to sign-in page after successful deletion
+      } else {
+        const data = await response.json();
+        dispatch(deleteUserFailure(data.message || 'Failed to delete account'));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure('Error deleting account'));
+    }
+  };
+
   return (
       <div className='max-w-lg mx-auto w-full p-3'>
           <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
@@ -201,9 +223,11 @@ export default function DashProfile() {
           {error && <p className='text-red-500 text-center mt-3'>{error}</p>}
           {success && <p className='text-green-500 text-center mt-3'>{success}</p>}
           <div className='text-red-500 flex justify-between mt-5'>
-              <span className='cursor-pointer'>Delete Account</span>
+              <span className='cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>
               <span className='cursor-pointer'>Sign Out</span>
           </div>
+          {deleteStatus === 'success' && <p className='text-green-500 text-center mt-3'>User deleted successfully</p>}
+          {deleteStatus === 'failure' && <p className='text-red-500 text-center mt-3'>Failed to delete user</p>}
       </div>
   )
 }

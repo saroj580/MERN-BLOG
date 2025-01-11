@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     currentUser: null,
     error: null,
-    loading: false
+    loading: false,
+    deleteStatus: null // Track deletion status
 }
 
 const userSlice = createSlice({
@@ -15,7 +16,7 @@ const userSlice = createSlice({
             state.error = null;
         },
         signInSuccess: (state, action) => {
-            state.currentUser = action.payload; // Ensure profile picture is included in payload
+            state.currentUser = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -25,9 +26,25 @@ const userSlice = createSlice({
         },
         updateUser: (state, action) => {
             state.currentUser = action.payload;
+        },
+        deleteUserStart: (state) => {
+            state.loading = true;
+            state.error = null;
+            state.deleteStatus = null;
+        },
+        deleteUserSuccess: (state) => {
+            state.currentUser = null;
+            state.loading = false;
+            state.error = null;
+            state.deleteStatus = 'success';
+        },
+        deleteUserFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+            state.deleteStatus = 'failure';
         }
     }
 })
 
-export const { signInFailure, signInStart, signInSuccess, updateUser } = userSlice.actions;
+export const { signInFailure, signInStart, signInSuccess, updateUser, deleteUserStart, deleteUserSuccess, deleteUserFailure } = userSlice.actions;
 export default userSlice.reducer;
