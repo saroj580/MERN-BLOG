@@ -18,9 +18,10 @@ export default function OAuth() {
             const resultFromGoogle = await signInWithPopup(auth, provider)
             console.log(resultFromGoogle);
             //sending the data to the backend 
-            const res = await fetch('/api/auth/google', {
+            const res = await fetch('http://localhost:8000/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 //converting the json file into readable format
                 body: JSON.stringify({
                     //extracting the name, email and avatar from the email

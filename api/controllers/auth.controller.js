@@ -49,13 +49,14 @@ export const signin = async (req, res, next) => {
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = validUser._doc;
         res.status(200).cookie('access_token', token, {
-            httpOnly: true
-        }).json(rest);
+            httpOnly: true,
+        }).json({ ...rest, profilePicture: validUser.profilePicture }); // Ensure profile picture is included
     } catch (error) {
         next(error);
     }
 
 }
+
 //next is used to handle the error
 export const google = async (req, res, next) => {
     const { name, email, googlePhotoUrl } = req.body;

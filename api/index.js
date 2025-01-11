@@ -7,18 +7,6 @@ import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser';
 import { v2 as cloudinary } from 'cloudinary';
 import uploadRoutes from './routes/upload.route.js';
-import cors from 'cors';
-
-
-
-
-const app = express();
-const port = 8000;
-
-//middleware
-app.use(cors());
-//middleware is a function that has access to the request and response object
-app.use(express.json())
 
 //Steps to hide the sensitive data
 // we have install package call dotenv to use .env file
@@ -28,11 +16,35 @@ app.use(express.json())
 //add the .env file in the .gitignore file so that it will not be pushed to the github
 //initialize the dotenv
 dotenv.config()
+
+const app = express();
+const port = 8000;
 cloudinary.config({
     cloud_name: "digyyblto",
+    cloud_url : process.env.CLOUDINARY_URL,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret : process.env.CLOUDINARY_API_SECRET
 })
+
+import cors from 'cors';
+
+//middleware
+//middleware is a function that has access to the request and response object
+app.use(cors({
+    origin: 'http://localhost:5174', // frontend port
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json())
+app.use(cookieParser());
+
+//Routes
+// here we are using the userRoutes from the user.route.js file
+//we have already created the get request in the user.route.js file so here we are using the userRoutes as use
+app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/upload', uploadRoutes);
 
 //connect to the database
 mongoose.connect(process.env.MONGO_URI)
@@ -42,13 +54,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(err)
 })
 
-//Routes
-// here we are using the userRoutes from the user.route.js file
-//we have already created the get request in the user.route.js file so here we are using the userRoutes as use
-app.use('/api/user', userRoutes)
-app.use('/api/auth', authRoutes)
-app.use(cookieParser());
-app.use('/api/upload', uploadRoutes);
+
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

@@ -1,5 +1,18 @@
 import User from '../model/user.model.js';
 import { errorHandler } from '../utils/errorHandler.js';
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+            return next(errorHandler(404, "User not found"));
+        }
+        const { password, ...rest } = user._doc; // Exclude password from response
+        res.status(200).json(rest);
+    } catch (error) {
+        next(error);
+    }
+}
 import bcryptjs from 'bcryptjs'
 
 export const test = (req, res) => {
@@ -43,5 +56,17 @@ export const updateUser = async (req, res, next) => {
         } catch (error) {
          next(error)   
         }
+    }
+}
+
+export const deleteUser = async (req, res, next) => {
+    if (req.user.id !== req.params.userId) {
+        return next(errorHandler(403, "you are not allowed to delete this account"))
+    }
+    try {
+        await User.findByIdAndDelete(req.params.userId);
+        res.status(200).json("User has been deleted Succefully");
+    } catch (error) {
+        next(error);
     }
 }
